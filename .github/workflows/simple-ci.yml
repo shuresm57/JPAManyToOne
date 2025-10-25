@@ -42,7 +42,7 @@ jobs:
     # 5. Build og test Docker image
     - name: Build and Test Docker
       run: |
-        docker run -d --name test-container -p 8080:8080 jpamanytoone:test
+        docker run -d --name test-container -p 8080:8080 jpamanytoone:test \
         sleep 30 \
         curl -f http://local:8080/actuator/health || exit 1
         docker stop test-container
