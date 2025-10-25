@@ -38,18 +38,8 @@ jobs:
     # 5. Build og test Docker image
     - name: Build and Test Docker
       run: |
-        # Build Docker image
-        docker build -f Dockerfile.multistage -t jpa-many-to-one:test .
-        
-        # Start container i baggrunden
-        docker run -d --name test-container -p 8080:8080 jpa-many-to-one:test
-        
-        # Vent på at applikationen starter
-        sleep 30
-        
-        # Test at applikationen svarer (tilpas endpoint efter behov)
-        curl -f http://localhost:8080/actuator/health || exit 1
-        
-        # Ryd op
+        docker run -d --name test-container -p 8080:8080 jpamanytoone:test
+        sleep 30 \
+        curl -f http://local:8080/actuator/health || exit 1
         docker stop test-container
         docker rm test-container
