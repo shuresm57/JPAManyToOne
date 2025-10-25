@@ -35,6 +35,10 @@ jobs:
     - name: Test and Build
       run: ./mvnw clean package
 
+      
+    - name: Build Docker image
+      run: docker build . --tag jpamanytoone:test
+
     # 5. Build og test Docker image
     - name: Build and Test Docker
       run: |
