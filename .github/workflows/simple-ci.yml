@@ -1,0 +1,55 @@
+name: Simple CI
+
+# Kør på push til main branch
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    # 1. Hent koden fra GitHub
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    # 2. Setup Java 17
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    # 3. Cache Maven dependencies
+    - name: Cache Maven dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository
+        key: maven-${{ hashFiles('**/pom.xml') }}
+
+
+    # 4. Test og build applikationen
+    - name: Test and Build
+      run: ./mvnw clean package
+
+    # 5. Build og test Docker image
+    - name: Build and Test Docker
+      run: |
+        # Build Docker image
+        docker build -f Dockerfile.multistage -t jpa-many-to-one:test .
+        
+        # Start container i baggrunden
+        docker run -d --name test-container -p 8080:8080 jpa-many-to-one:test
+        
+        # Vent på at applikationen starter
+        sleep 30
+        
+        # Test at applikationen svarer (tilpas endpoint efter behov)
+        curl -f http://localhost:8080/actuator/health || exit 1
+        
+        # Ryd op
+        docker stop test-container
+        docker rm test-container

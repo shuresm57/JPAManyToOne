@@ -1,0 +1,40 @@
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+README*
+
+# IDE files
+.idea
+.vscode
+*.iml
+
+# Build artifacts
+target/
+!target/*.jar
+
+# Test files
+src/test/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
